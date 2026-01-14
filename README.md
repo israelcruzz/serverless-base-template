@@ -1,69 +1,133 @@
-<!--
-title: 'AWS Simple HTTP Endpoint example in NodeJS'
-description: 'This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.'
-layout: Doc
-framework: v4
-platform: AWS
-language: nodeJS
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, Inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+````markdown
+# Serverless Project Template
 
-# Serverless Framework Node HTTP API on AWS
+![Project Image](./path/to/your/image.png)  
+*Replace the path above with your project screenshot or illustration.*
 
-This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.
+---
 
-This template does not include any kind of persistence (database). For more advanced examples, check out the [serverless/examples repository](https://github.com/serverless/examples/) which includes Typescript, Mongo, DynamoDB and other examples.
+## 🇬🇧 English Version
 
-## Usage
+### Overview
+This is a **Serverless Framework template** using **Express.js** for building AWS Lambda functions.  
+It supports modular architecture and HTTP API routing, making it easy to expand your services (auth, users, uploads, etc.).
 
-### Deployment
+### Features
+- Node.js 20.x runtime
+- Express.js for routing
+- Modular controllers
+- `serverless-offline` plugin for local development
+- Individual Lambda packaging
+- ESBuild for bundling and minification
+- Supports ANY HTTP method via `httpApi`
 
-In order to deploy the example, you need to run the following command:
+### Getting Started
 
-```
-serverless deploy
-```
+1. **Install dependencies**
+```bash
+npm install
+````
 
-After running deploy, you should see output similar to:
+2. **Run locally**
 
-```
-Deploying "serverless-http-api" to stage "dev" (us-east-1)
-
-✔ Service deployed to stack serverless-http-api-dev (91s)
-
-endpoint: GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
-functions:
-  hello: serverless-http-api-dev-hello (1.6 kB)
+```bash
+npx serverless offline
 ```
 
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [HTTP API (API Gateway V2) event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api).
+The API will be available at `http://localhost:3000`.
 
-### Invocation
+3. **Deploy to AWS**
 
-After successful deployment, you can call the created application via HTTP:
-
-```
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
+```bash
+npx serverless deploy
 ```
 
-Which should result in response similar to:
-
-```json
-{ "message": "Go Serverless v4! Your function executed successfully!" }
-```
-
-### Local development
-
-The easiest way to develop and test your function is to use the `dev` command:
+### Project Structure
 
 ```
-serverless dev
+src/
+ ├─ Domains/
+ │   ├─ Auth/
+ │   │   ├─ handler.ts
+ │   │   └─ Controllers/
+ │   │       └─ SignInController.ts
+ │   └─ Users/
+ └─ buildApp.ts
+serverless.yml
 ```
 
-This will start a local emulator of AWS Lambda and tunnel your requests to and from AWS Lambda, allowing you to interact with your function as if it were running in the cloud.
+### Routes Example
 
-Now you can invoke the function as before, but this time the function will be executed locally. Now you can develop your function locally, invoke it, and see the results immediately without having to re-deploy.
+| Method | Path                  | Controller               |
+| ------ | --------------------- | ------------------------ |
+| GET    | /authentication/auth  | SignInController.handler |
+| POST   | /authentication/login | SignInController.handler |
 
-When you are done developing, don't forget to run `serverless deploy` to deploy the function to the cloud.
+> Adjust routes in Express to match the `serverless.yml` path.
+
+---
+
+## 🇧🇷 Versão em Português
+
+### Visão Geral
+
+Este é um **template Serverless Framework** usando **Express.js** para criar funções AWS Lambda.
+Suporta arquitetura modular e roteamento HTTP API, facilitando a expansão do seu projeto (auth, usuários, uploads, etc.).
+
+### Funcionalidades
+
+* Node.js 20.x runtime
+* Express.js para roteamento
+* Controllers modulares
+* Plugin `serverless-offline` para desenvolvimento local
+* Pacotes individuais por função Lambda
+* ESBuild para bundle e minificação
+* Suporte para qualquer método HTTP via `httpApi`
+
+### Como Começar
+
+1. **Instale as dependências**
+
+```bash
+npm install
+```
+
+2. **Rodar localmente**
+
+```bash
+npx serverless offline
+```
+
+A API ficará disponível em `http://localhost:3000`.
+
+3. **Deploy para AWS**
+
+```bash
+npx serverless deploy
+```
+
+### Estrutura do Projeto
+
+```
+src/
+ ├─ Domains/
+ │   ├─ Auth/
+ │   │   ├─ handler.ts
+ │   │   └─ Controllers/
+ │   │       └─ SignInController.ts
+ │   └─ Users/
+ └─ buildApp.ts
+serverless.yml
+```
+
+### Exemplo de Rotas
+
+| Método | Caminho               | Controller               |
+| ------ | --------------------- | ------------------------ |
+| GET    | /authentication/auth  | SignInController.handler |
+| POST   | /authentication/login | SignInController.handler |
+
+> Ajuste as rotas no Express para que correspondam ao `serverless.yml`.
+
+```
+```
