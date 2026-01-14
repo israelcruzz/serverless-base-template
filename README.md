@@ -1,4 +1,3 @@
-````markdown
 # Serverless Project Template
 
 ![Project Image](https://raw.githubusercontent.com/israelcruzz/serverless-base-template/9013d3796344d9a43168a34bfa713c07b6371c2d/public/images/thumb.svg)  
