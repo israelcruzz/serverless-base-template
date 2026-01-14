@@ -1,0 +1,35 @@
+org: israelcruzworktest
+service: serverless-project-template
+
+plugins:
+  - serverless-offline
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: false
+    external:
+      - '@aws-sdk/*'
+    exclude:
+      - '@aws-sdk/*'
+
+package: 
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  architecture: arm64
+  stage: ${opt:stage, 'dev'}
+  memorySize: 128
+  timeout: 30
+
+functions:
+  auth:
+    handler: src\Domains\Auth\handler.handler
+    events:
+      - httpApi:
+          path: /authentication/{proxy+}
+          method: ANY
