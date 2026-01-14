@@ -1,12 +1,7 @@
-import express from "express"
 import AuthRoutes from "@/Domains/Auth/routes"
+import BuildAppFactory from "@/Domains/Shared/factories/buildAppFactory"
 
-export const buildApp = () => {
-    const app = express()
-
-    app.use(express.json())
-
-    app.use("/authentication", AuthRoutes)
-
-    return app
-}
+export const buildApp = BuildAppFactory.handle({
+    router: AuthRoutes,
+    basePathName: "/authentication"
+})
