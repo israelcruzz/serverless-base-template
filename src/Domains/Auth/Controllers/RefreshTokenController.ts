@@ -43,3 +43,5 @@ class RefreshTokenController implements IController {
         }
     }
 }
+
+export default new RefreshTokenController()
