@@ -1,16 +1,14 @@
 import { cognitoClient } from "@/Setup/core/cognitoClient"
 import { HttpRequest, HttpResponse } from "@/Setup/protocols/HttpProtocols"
 import { IController } from "@/Setup/protocols/IController"
-import { ConfirmForgotPasswordCommand } from "@aws-sdk/client-cognito-identity-provider"
+import { ForgotPasswordCommand } from "@aws-sdk/client-cognito-identity-provider"
 import z from "zod"
 
-class ResetPasswordController implements IController {
+class ForgotPasswordController implements IController {
     async handler(httpRequest: HttpRequest, httpResponse: HttpResponse) {
         try {
             const bodySchema = z.object({
-                code: z.string().nonempty,
-                email: z.email().nonempty,
-                newPassword: z.string().min(8).nonempty
+                email: z.email().nonempty
             })
 
             const validateSchema = bodySchema.safeParse(httpRequest.body)
@@ -20,16 +18,12 @@ class ResetPasswordController implements IController {
             }
 
             const {
-                email,
-                code,
-                newPassword
+                email
             } = validateSchema.data
 
-            const command = new ConfirmForgotPasswordCommand({
+            const command = new ForgotPasswordCommand({
                 ClientId: process.env.COGNITO_CLIENT_ID,
-                Username: email as string,
-                ConfirmationCode: code as string,
-                Password: newPassword as string
+                Username: email as string
             })
 
             await cognitoClient.send(command)
@@ -41,4 +35,4 @@ class ResetPasswordController implements IController {
     }
 }
 
-export default new ResetPasswordController()
+export default new ForgotPasswordController()
