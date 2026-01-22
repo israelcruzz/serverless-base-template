@@ -27,6 +27,14 @@ provider:
   timeout: 30
   environment:
     COGNITO_CLIENT_ID: !Ref CognitoUserPool
+  httpApi:
+    authorizers:
+      CognitoAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: !GetAtt CognitoUserPool.ProviderURL
+        audience:
+          - !Ref CognitoUserPoolClient
 
 functions:
   auth:
@@ -35,6 +43,14 @@ functions:
       - httpApi:
           path: /authentication/{proxy+}
           method: ANY
+  user:
+    handler: src\Domains\User\handler.handler
+    events:
+      - httpApi:
+          path: /user/{proxy+}
+          method: ANY
+          authorizer: 
+            name: CognitoAuthorizer
 
 resources:
   Resources:
