@@ -25,6 +25,8 @@ provider:
   stage: ${opt:stage, 'dev'}
   memorySize: 128
   timeout: 30
+  environment:
+    COGNITO_CLIENT_ID: !Ref CognitoUserPool
 
 functions:
   auth:
@@ -86,8 +88,7 @@ resources:
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        UserPoolId:
-          Ref: CognitoUserPool
+        UserPoolId: !Ref CognitoUserPool
         AccessTokenValidity: 15
         IdTokenValidity: 15
         RefreshTokenValidity: 30
