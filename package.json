@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.971.0",
     "@eslint/js": "^9.39.2",
     "@types/aws-lambda": "^8.10.159",
     "@types/express": "^5.0.6",
@@ -11,6 +12,8 @@
   },
   "dependencies": {
     "express": "^5.2.1",
-    "serverless-http": "^4.0.0"
+    "reflect-metadata": "^0.2.2",
+    "serverless-http": "^4.0.0",
+    "zod": "^4.3.5"
   }
 }

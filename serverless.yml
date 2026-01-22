@@ -10,11 +10,11 @@ build:
     minify: true
     sourcemap: false
     external:
-      - '@aws-sdk/*'
+      - "@aws-sdk/*"
     exclude:
-      - '@aws-sdk/*'
+      - "@aws-sdk/*"
 
-package: 
+package:
   individually: true
 
 provider:
@@ -33,3 +33,78 @@ functions:
       - httpApi:
           path: /authentication/{proxy+}
           method: ANY
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: TemplateCognitoUserPool
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: verified_email
+            - Priority: 1
+        DeletionProtection: active
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 8
+            RequireLowercase: true
+            RequireNumbers: true
+            RequireSymbols: true
+            RequireUppercase: true
+        # AdminCreateUserConfig
+        # AliasAttributes:
+        #   - email
+        #   - phone_number
+        UsernameAttributes:
+          - email
+        UsernameConfiguration:
+          CaseSensitive: true
+        Schema:
+          - Name: email
+            Required: true
+            Mutable: true
+          - Name: phone_number
+            Required: true
+            Mutable: true
+          - Name: name
+            Required: true
+            Mutable: true
+          - Name: role
+            AttributeDataType: String
+            Mutable: true
+        MfaConfiguration: OPTIONAL
+        EnabledMfas:
+          - SOFTWARE_TOKEN_MFA
+        DeviceConfiguration:
+          ChallengeRequiredOnNewDevice: true
+          DeviceOnlyRememberedOnUserPrompt: true
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            -  email
+
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId:
+          Ref: CognitoUserPool
+        AccessTokenValidity: 15
+        IdTokenValidity: 15
+        RefreshTokenValidity: 30
+        TokenValidityUnits:
+          AccessToken: minutes
+          IdToken: minutes
+          RefreshToken: days
+        EnableTokenRevocation: true
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        AuthSessionValidity: 1
+        WriteAttributes:
+          - email
+          - phone_number
+          - custom:role
+        ReadAttributes:
+          - email
+          - phone_number
+          - custom:role
