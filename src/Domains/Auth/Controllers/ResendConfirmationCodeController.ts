@@ -8,7 +8,7 @@ class ResendConfirmationCodeController implements IController {
     async handler(httpRequest: HttpRequest, httpResponse: HttpResponse) {
         try {
             const bodySchema = z.object({
-                email: z.email().nonempty
+                email: z.email().nonempty()
             })
 
             const validateSchema = bodySchema.safeParse(httpRequest.body)
@@ -30,6 +30,8 @@ class ResendConfirmationCodeController implements IController {
 
             return httpResponse.status(204)
         } catch (error) {
+            console.error(error)
+
             return httpResponse.status(500).send({ message: "Internal Server Error" })
         }
     }

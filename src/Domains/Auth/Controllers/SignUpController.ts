@@ -5,15 +5,13 @@ import { CodeDeliveryFailureException, InvalidEmailRoleAccessPolicyException, In
 import z from "zod";
 
 class SignUpController implements IController {
-    private DEFAULT_ROLE: "admin" | "user" = "user"
-
     async handler(httpRequest: HttpRequest, httpResponse: HttpResponse): Promise<HttpResponse> {
         try {
             const bodySchema = z.object({
-                email: z.email().nonempty,
-                phoneNumber: z.string().min(8).nonempty,
-                name: z.string().min(3).nonempty,
-                password: z.string().min(8).nonempty
+                email: z.string().nonempty(),
+                phoneNumber: z.string().min(8).nonempty(),
+                name: z.string().min(3).nonempty(),
+                password: z.string().min(8).nonempty()
             })
 
             const validateSchema = bodySchema.safeParse(httpRequest.body)
@@ -29,6 +27,8 @@ class SignUpController implements IController {
                 phoneNumber
             } = validateSchema.data
 
+            const DEFAULT_ROLE = "user"
+
             const command = new SignUpCommand({
                 ClientId: process.env.COGNITO_CLIENT_ID,
                 Username: email as string,
@@ -43,12 +43,12 @@ class SignUpController implements IController {
                         Value: name as string
                     },
                     {
-                        Name: "phoneNumber",
+                        Name: "phone_number",
                         Value: phoneNumber as string
                     },
                     {
                         Name: "custom:role",
-                        Value: this.DEFAULT_ROLE as string
+                        Value: DEFAULT_ROLE as string
                     }
                 ]
             })
@@ -57,6 +57,8 @@ class SignUpController implements IController {
 
             return httpResponse.status(201).send({ message: "User was created!" })
         } catch (error) {
+            console.error(error)
+
             if (error instanceof CodeDeliveryFailureException) {
                 return httpResponse.status(502).send({
                     message: "Failed to deliver verification code. Please try again later."

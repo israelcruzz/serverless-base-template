@@ -8,8 +8,8 @@ class ConfirmSignUpController implements IController {
     async handler(httpRequest: HttpRequest, httpResponse: HttpResponse) {
         try {
             const bodySchema = z.object({
-                code: z.string().nonempty,
-                email: z.email().nonempty
+                code: z.string().nonempty(),
+                email: z.email().nonempty()
             })
 
             const validateSchema = bodySchema.safeParse(httpRequest.body)
@@ -33,6 +33,8 @@ class ConfirmSignUpController implements IController {
 
             return httpResponse.status(204)
         } catch (error) {
+            console.error(error)
+
             return httpResponse.status(500).send({ message: "Internal Server Error" })
         }
     }

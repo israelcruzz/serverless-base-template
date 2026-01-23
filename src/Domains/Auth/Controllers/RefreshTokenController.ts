@@ -8,7 +8,7 @@ class RefreshTokenController implements IController {
     async handler(httpRequest: HttpRequest, httpResponse: HttpResponse) {
         try {
             const bodySchema = z.object({
-                refreshToken: z.string().nonempty
+                refreshToken: z.string().nonempty()
             })
 
             const validateSchema = bodySchema.safeParse(httpRequest.body)
@@ -39,6 +39,8 @@ class RefreshTokenController implements IController {
 
             return httpResponse.status(200).send({ body })
         } catch (error) {
+            console.error(error)
+
             return httpResponse.status(500).send({ message: "Internal Server Error" })
         }
     }

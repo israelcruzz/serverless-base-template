@@ -20,13 +20,13 @@ package:
 provider:
   name: aws
   runtime: nodejs20.x
-  region: us-east-1
+  region: sa-east-1
   architecture: arm64
   stage: ${opt:stage, 'dev'}
   memorySize: 128
   timeout: 30
   environment:
-    COGNITO_CLIENT_ID: !Ref CognitoUserPool
+    COGNITO_CLIENT_ID: !Ref CognitoUserPoolClient
   httpApi:
     authorizers:
       CognitoAuthorizer:
@@ -38,19 +38,19 @@ provider:
 
 functions:
   auth:
-    handler: src\Domains\Auth\handler.handler
+    handler: src/Domains/Auth/handler.handler
     events:
       - httpApi:
           path: /authentication/{proxy+}
           method: ANY
-  user:
-    handler: src\Domains\User\handler.handler
-    events:
-      - httpApi:
-          path: /user/{proxy+}
-          method: ANY
-          authorizer: 
-            name: CognitoAuthorizer
+  # user:
+  #   handler: src\Domains\User\handler.handler
+  #   events:
+  #     - httpApi:
+  #         path: /user/{proxy+}
+  #         method: ANY
+  #         authorizer: 
+  #           name: CognitoAuthorizer
 
 resources:
   Resources:
@@ -61,8 +61,7 @@ resources:
         AccountRecoverySetting:
           RecoveryMechanisms:
             - Name: verified_email
-            - Priority: 1
-        DeletionProtection: active
+              Priority: 1
         Policies:
           PasswordPolicy:
             MinimumLength: 8
@@ -97,6 +96,8 @@ resources:
         DeviceConfiguration:
           ChallengeRequiredOnNewDevice: true
           DeviceOnlyRememberedOnUserPrompt: true
+        AutoVerifiedAttributes:
+          - email
         UserAttributeUpdateSettings:
           AttributesRequireVerificationBeforeUpdate:
             -  email
@@ -116,12 +117,3 @@ resources:
         ExplicitAuthFlows:
           - ALLOW_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
-        AuthSessionValidity: 1
-        WriteAttributes:
-          - email
-          - phone_number
-          - custom:role
-        ReadAttributes:
-          - email
-          - phone_number
-          - custom:role

@@ -23,8 +23,8 @@ class SignInController implements IController {
             const { email, password } = validationSchema.data
 
             const command = new InitiateAuthCommand({
-                AuthFlow: "ADMIN_USER_PASSWORD_AUTH",
                 ClientId: process.env.COGNITO_CLIENT_ID,
+                AuthFlow: "USER_PASSWORD_AUTH",
                 AuthParameters: {
                     USERNAME: email,
                     PASSWORD: password
@@ -41,6 +41,8 @@ class SignInController implements IController {
 
             return httpResponse.status(200).send({ body })
         } catch (error) {
+            console.error(error)
+
             return httpResponse.status(500).send({ message: "Internal Server Error" })
         }
     }
